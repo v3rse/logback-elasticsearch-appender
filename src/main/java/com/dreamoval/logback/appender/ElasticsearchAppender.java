@@ -8,6 +8,7 @@ import io.searchbox.core.Index;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -32,6 +33,16 @@ public class ElasticsearchAppender extends UnsynchronizedAppenderBase<ILoggingEv
     public void setConnectionSource(ElasticseacrchConnectionSource connectionSource) {
         this.connectionSource = connectionSource;
     }
+
+    public void start(){
+        connectionSource.init();
+        super.start();
+    }
+
+    public void stop(){
+        connectionSource.getClient().shutdownClient();
+        super.stop();
+    }
     
     /**
      * Simple Callable class that insert the document into ElasticSearch
@@ -45,11 +56,15 @@ public class ElasticsearchAppender extends UnsynchronizedAppenderBase<ILoggingEv
         }
 
         protected void writeBasic(Map<String, Object> json, ILoggingEvent event) {
+            Map<String,String> MdcMap = event.getMDCPropertyMap();
             json.put("hostName", connectionSource.getHostName());
             json.put("applicationName", connectionSource.getApplicationName());
-            json.put("timestamp", event.getTimeStamp());
+            json.put("timestamp",new Date(event.getTimeStamp()));
             json.put("logger", event.getLoggerName());
             json.put("level", event.getLevel().toString());
+            json.put("username", MdcMap.get("username"));
+            json.put("serviceName", MdcMap.get("serviceName"));
+            json.put("moduleName", MdcMap.get("moduleName"));
             json.put("message", event.getMessage());
         }
 

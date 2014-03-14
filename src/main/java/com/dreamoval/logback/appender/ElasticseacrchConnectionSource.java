@@ -16,7 +16,7 @@ public class ElasticseacrchConnectionSource {
     private String elasticType = "logging";
     private String elasticHost = "http://localhost:9200";
 
-    protected void initESClient(){
+    protected void init(){
         try {
             // Configuration
             ClientConfig clientConfig = new ClientConfig.Builder(getElasticHost()).multiThreaded(true).build();
