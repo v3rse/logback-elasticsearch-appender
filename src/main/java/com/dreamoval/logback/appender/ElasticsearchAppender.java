@@ -109,6 +109,7 @@ public class ElasticsearchAppender extends UnsynchronizedAppenderBase<ILoggingEv
                 }
             } catch (Throwable ex) {
                 System.out.println("Unable to write log: " + ex.getLocalizedMessage());
+                ex.printStackTrace();
             }
             return loggingEvent;
         }

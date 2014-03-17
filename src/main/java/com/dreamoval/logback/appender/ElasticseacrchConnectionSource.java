@@ -3,6 +3,7 @@ package com.dreamoval.logback.appender;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.config.ClientConfig;
+import io.searchbox.client.config.HttpClientConfig;
 
 /**
  * @author Henry Sampson
@@ -19,11 +20,11 @@ public class ElasticseacrchConnectionSource {
     protected void init(){
         try {
             // Configuration
-            ClientConfig clientConfig = new ClientConfig.Builder(getElasticHost()).multiThreaded(true).build();
-
+//            ClientConfig clientConfig = new ClientConfig.Builder(getElasticHost()).multiThreaded(true).build();
+            HttpClientConfig clientConfig = new HttpClientConfig.Builder(getElasticHost()).multiThreaded(true).build();
             // Construct a new Jest client according to configuration via factory
             JestClientFactory factory = new JestClientFactory();
-            factory.setClientConfig(clientConfig);
+            factory.setHttpClientConfig(clientConfig);
             setClient(factory.getObject());
         } catch (Exception ex) {
             System.err.println("Unable to initialize client: " + ex.getLocalizedMessage());
